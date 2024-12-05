@@ -3,7 +3,7 @@ import Filters from "@/components/Filters";
 import Pagination from "@/components/Pagination";
 import { fetchCharacters } from "@/lib/fetchCharacters";
 
-export default async function Home({ searchParams }: { searchParams: {page:string,status:string,gender:string} }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{page:string,status:string,gender:string}> }) {
   const {page = "1",status,gender} = await searchParams
   
 

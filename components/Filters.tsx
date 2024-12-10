@@ -1,24 +1,24 @@
 "use client";
 
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { RootState, setFilters } from "@/redux/store";
 
-export default function Filters({
-  currentFilters,
-}: {
-  currentFilters: { status: string; gender: string };
-}) {
+export default function Filters() {
+  const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.filters);
   const router = useRouter();
-  const [filters, setFilters] = useState(currentFilters);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
 
-  const applyFilters = () => {
-    const params = new URLSearchParams(filters);
-    router.push(`/?${params}`);
+    // Redux durumunu güncelle
+    const updatedFilters = { ...filters, [name]: value };
+    dispatch(setFilters(updatedFilters));
+
+    // URL'yi güncelle
+    const params = new URLSearchParams(updatedFilters);
+    router.push(`/?${params.toString()}`);
   };
 
   return (
@@ -46,12 +46,6 @@ export default function Filters({
         <option value="genderless">Genderless</option>
         <option value="unknown">Unknown</option>
       </select>
-      <button
-        onClick={applyFilters}
-        className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
-      >
-        Apply Filters
-      </button>
     </div>
   );
 }
